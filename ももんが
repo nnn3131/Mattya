@@ -1,3 +1,51 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>ももんが大戦争</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>ももんが大戦争</h1>
+  <canvas id="gameCanvas" width="900" height="400"></canvas>
+  <div id="buttons"></div>
+  <script src="game.js"></script>
+</body>
+</html>
+
+body {
+  text-align: center;
+  font-family: sans-serif;
+  background: #f0f0f0;
+}body {
+  text-align: center;
+  font-family: sans-serif;
+  background: #f0f0f0;
+}
+
+canvas {
+  border: 2px solid black;
+  background: #ccf2ff;
+}
+
+button {
+  margin: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+canvas {
+  border: 2px solid black;
+  background: #ccf2ff;
+}
+
+button {
+  margin: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+
+
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
