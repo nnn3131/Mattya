@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>ももんが大戦争</title>
+<style>
+body {
+  text-align: center;
+  font-family: sans-serif;
+  background: #f0f0f0;
+}
+canvas {
+  border: 2px solid black;
+  background: #ccf2ff;
+}
+button {
+  margin: 4px;
+  padding: 6px 10px;
+  font-size: 14px;
+}
+</style>
+</head>
+<body>
+
+<h1>ももんが大戦争</h1>
+<canvas id="gameCanvas" width="900" height="400"></canvas>
+<div id="buttons"></div>
+
+<script>
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+const characters = [
+  { name: "ももんが", hp: 100, atk: 5 },
+  { name: "ドンチッチ", hp: 120, atk: 7 },
+  { name: "けんいち", hp: 150, atk: 4 },
+  { name: "杜甫", hp: 80, atk: 10 },
+  { name: "はぶ", hp: 200, atk: 3 },
+  { name: "ぱるの", hp: 90, atk: 8 },
+  { name: "FE", hp: 110, atk: 6 }
+];
+
+let units = [];
+let enemies = [];
+let baseHP = 1000;
+let enemyBaseHP = 1000;
+
+function createButtons() {
+  const div = document.getElementById("buttons");
+  characters.forEach(char => {
+    const btn = document.createElement("button");
+    btn.textContent = char.name;
+    btn.onclick = () => spawnUnit(char);
+    div.appendChild(btn);
+  });
+}
+
+function spawnUnit(char) {
+  units.push({
+    ...char,
+    x: 50,
+    y: 300
+  });
+}
+
+function spawnEnemy() {
+  enemies.push({
+    name: "敵",
+    hp: 100,
+    atk: 5,
+    x: 800,
+    y: 300
+  });
+}
+
+setInterval(spawnEnemy, 2000);
+
+function update() {
+  units.forEach(u => u.x += 0.5);
+  enemies.forEach(e => e.x -= 0.5);
+
+  units.forEach(u => {
+    enemies.forEach(e => {
+      if (Math.abs(u.x - e.x) < 20) {
+        e.hp -= u.atk;
+        u.hp -= e.atk;
+      }
+    });
+  });
+
+  units = units.filter(u => u.hp > 0 && u.x < 900);
+  enemies = enemies.filter(e => e.hp > 0 && e.x > 0);
+
+  enemies.forEach(e => {
+    if (e.x < 50) baseHP -= 1;
+  });
+
+  units.forEach(u => {
+    if (u.x > 850) enemyBaseHP -= 1;
+  });
+}
+
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "blue";
+  ctx.fillRect(0, 250, 50, 150);
+  ctx.fillStyle = "red";
+  ctx.fillRect(850, 250, 50, 150);
+
+  ctx.fillStyle = "black";
+  ctx.fillText("自拠点HP: " + baseHP, 10, 20);
+  ctx.fillText("敵拠点HP: " + enemyBaseHP, 750, 20);
+
+  units.forEach(u => {
+    ctx.fillStyle = "green";
+    ctx.fillRect(u.x, u.y, 20, 20);
+    ctx.fillText(u.name, u.x - 10, u.y - 5);
+  });
+
+  enemies.forEach(e => {
+    ctx.fillStyle = "purple";
+    ctx.fillRect(e.x, e.y, 20, 20);
+  });
+}
+
+function gameLoop() {
+  update();
+  draw();
+
+  if (baseHP <= 0) {
+    alert("負け！");
+    location.reload();
+  }
+  if (enemyBaseHP <= 0) {
+    alert("勝ち！");
+    location.reload();
+  }
+
+  requestAnimationFrame(gameLoop);
+}
+
+createButtons();
+gameLoop();
+</script>
+
+</body>
+</html>
